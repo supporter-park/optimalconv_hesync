@@ -1,4 +1,4 @@
-module github.com/dwkim606/test_lattigo
+module github.com/supporter-park/optimalconv_hesync
 
 go 1.13
 

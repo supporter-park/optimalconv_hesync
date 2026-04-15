@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dwkim606/test_lattigo/bfv"
-	"github.com/dwkim606/test_lattigo/dbfv"
-	"github.com/dwkim606/test_lattigo/drlwe"
-	"github.com/dwkim606/test_lattigo/ring"
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/bfv"
+	"github.com/supporter-park/optimalconv_hesync/dbfv"
+	"github.com/supporter-park/optimalconv_hesync/drlwe"
+	"github.com/supporter-park/optimalconv_hesync/ring"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 func check(err error) {

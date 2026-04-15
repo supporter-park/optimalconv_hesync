@@ -1,8 +1,8 @@
 package rlwe
 
 import (
-	"github.com/dwkim606/test_lattigo/ring"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/ring"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 // Decryptor is an interface generic RLWE encryption.

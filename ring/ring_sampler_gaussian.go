@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"math"
 
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 // GaussianSampler keeps the state of a truncated Gaussian polynomial sampler.

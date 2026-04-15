@@ -3,7 +3,7 @@ package rlwe
 import (
 	"encoding/binary"
 
-	"github.com/dwkim606/test_lattigo/ring"
+	"github.com/supporter-park/optimalconv_hesync/ring"
 )
 
 // SecretKey is a type for generic RLWE secret keys.

@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/dwkim606/test_lattigo/ring"
+	"github.com/supporter-park/optimalconv_hesync/ring"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

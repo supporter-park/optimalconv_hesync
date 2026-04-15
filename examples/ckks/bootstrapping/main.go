@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/dwkim606/test_lattigo/ckks"
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/ckks"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 func main() {

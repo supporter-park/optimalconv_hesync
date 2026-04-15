@@ -3,8 +3,8 @@ package ckks
 import (
 	"math"
 
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 	//"fmt"
 )
 

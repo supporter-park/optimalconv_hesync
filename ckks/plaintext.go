@@ -1,7 +1,7 @@
 package ckks
 
 import (
-	"github.com/dwkim606/test_lattigo/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
 )
 
 // Plaintext is is a Element with only one Poly.

@@ -4,7 +4,7 @@ import (
 	"math"
 	"math/bits"
 
-	"github.com/dwkim606/test_lattigo/ring"
+	"github.com/supporter-park/optimalconv_hesync/ring"
 )
 
 func extendBasisSmallNormAndCenter(ringQ, ringP *ring.Ring, polQ, polP *ring.Poly) {

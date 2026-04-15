@@ -1,9 +1,9 @@
 package ckks
 
 import (
-	"github.com/dwkim606/test_lattigo/ckks/bettersine"
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/ckks/bettersine"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 	"math"
 	"math/cmplx"
 	"runtime"

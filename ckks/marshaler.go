@@ -5,8 +5,8 @@ import (
 	"errors"
 	"math"
 
-	"github.com/dwkim606/test_lattigo/ring"
-	"github.com/dwkim606/test_lattigo/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/ring"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
 )
 
 // GetDataLen returns the length in bytes of the target Ciphertext.

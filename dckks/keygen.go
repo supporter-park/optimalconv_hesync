@@ -2,8 +2,8 @@
 package dckks
 
 import (
-	"github.com/dwkim606/test_lattigo/ckks"
-	"github.com/dwkim606/test_lattigo/drlwe"
+	"github.com/supporter-park/optimalconv_hesync/ckks"
+	"github.com/supporter-park/optimalconv_hesync/drlwe"
 )
 
 // CKGProtocol is the structure storing the parameters and state for a party in the collective key generation protocol.

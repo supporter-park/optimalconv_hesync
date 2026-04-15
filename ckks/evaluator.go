@@ -6,9 +6,9 @@ import (
 	"math"
 	"unsafe"
 
-	"github.com/dwkim606/test_lattigo/ring"
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/ring"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 // Operand is a common interface for Ciphertext and Plaintext types.
@@ -141,6 +141,11 @@ type Evaluator interface {
 	// ==============
 	ShallowCopy() Evaluator
 	WithKey(rlwe.EvaluationKey) Evaluator
+
+	// HESync support: key management for on-demand EVK loading
+	PreparePermuteNTTIndex(galEls []uint64)
+	SetRotationKeys(rtks *rlwe.RotationKeySet)
+	SetRelinearizationKey(rlk *rlwe.RelinearizationKey)
 }
 
 // evaluator is a struct that holds the necessary elements to execute the homomorphic operations between Ciphertexts and/or Plaintexts.
@@ -249,6 +254,30 @@ func (eval *evaluator) WithKey(evaluationKey rlwe.EvaluationKey) Evaluator {
 		rtks:             evaluationKey.Rtks,
 		permuteNTTIndex:  indexes,
 	}
+}
+
+// PreparePermuteNTTIndex pre-computes NTT permutation indexes for the given
+// Galois elements. This allows the evaluator to perform rotations by these
+// elements even if the actual SwitchingKey data is loaded later.
+func (eval *evaluator) PreparePermuteNTTIndex(galEls []uint64) {
+	if eval.permuteNTTIndex == nil {
+		eval.permuteNTTIndex = make(map[uint64][]uint64)
+	}
+	for _, galEl := range galEls {
+		if _, exists := eval.permuteNTTIndex[galEl]; !exists {
+			eval.permuteNTTIndex[galEl] = ring.PermuteNTTIndex(galEl, uint64(eval.ringQ.N))
+		}
+	}
+}
+
+// SetRotationKeys replaces the evaluator's rotation key set reference.
+func (eval *evaluator) SetRotationKeys(rtks *rlwe.RotationKeySet) {
+	eval.rtks = rtks
+}
+
+// SetRelinearizationKey replaces the evaluator's relinearization key reference.
+func (eval *evaluator) SetRelinearizationKey(rlk *rlwe.RelinearizationKey) {
+	eval.rlk = rlk
 }
 
 func (eval *evaluator) checkBinary(op0, op1, opOut Operand, opOutMinDegree int) {

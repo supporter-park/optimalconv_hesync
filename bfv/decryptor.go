@@ -1,7 +1,7 @@
 package bfv
 
 import (
-	"github.com/dwkim606/test_lattigo/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
 )
 
 // Decryptor is an interface wrapping a rlwe.Decryptor.

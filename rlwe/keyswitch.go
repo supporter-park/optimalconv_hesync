@@ -3,7 +3,7 @@ package rlwe
 import (
 	"math"
 
-	"github.com/dwkim606/test_lattigo/ring"
+	"github.com/supporter-park/optimalconv_hesync/ring"
 )
 
 // KeySwitcher is a struct for RLWE key-switching.

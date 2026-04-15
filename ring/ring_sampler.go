@@ -1,7 +1,7 @@
 package ring
 
 import (
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 )
 
 const precision = uint64(56)

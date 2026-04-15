@@ -5,11 +5,11 @@ import (
 	"math"
 	"math/bits"
 
-	"github.com/dwkim606/test_lattigo/rlwe"
-	"github.com/dwkim606/test_lattigo/utils"
+	"github.com/supporter-park/optimalconv_hesync/rlwe"
+	"github.com/supporter-park/optimalconv_hesync/utils"
 
-	"github.com/dwkim606/test_lattigo/bfv"
-	"github.com/dwkim606/test_lattigo/ring"
+	"github.com/supporter-park/optimalconv_hesync/bfv"
+	"github.com/supporter-park/optimalconv_hesync/ring"
 )
 
 func obliviousRiding() {

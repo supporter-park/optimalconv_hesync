@@ -2,8 +2,8 @@
 package dbfv
 
 import (
-	"github.com/dwkim606/test_lattigo/bfv"
-	"github.com/dwkim606/test_lattigo/drlwe"
+	"github.com/supporter-park/optimalconv_hesync/bfv"
+	"github.com/supporter-park/optimalconv_hesync/drlwe"
 )
 
 // CKGProtocol is the structure storing the parameters and state for a party in the collective key generation protocol.
