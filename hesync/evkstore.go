@@ -15,6 +15,17 @@ import (
 type EVKStore struct {
 	dir   string
 	index map[EVKIdentifier]string // ID -> absolute file path
+
+	// useDirectIO, when true, opens key files with O_DIRECT so reads and writes
+	// bypass the OS page cache. This avoids polluting DRAM with EVK bytes that
+	// will not be reused, at the cost of stricter alignment requirements
+	// (handled internally).
+	useDirectIO bool
+
+	// keyDataLen is the logical (unpadded) size of a single serialized key.
+	// Recorded at first save; used by KeySize when O_DIRECT padding makes the
+	// on-disk file size larger than the actual payload.
+	keyDataLen int
 }
 
 // NewEVKStore creates a new EVKStore backed by the given directory.
@@ -27,6 +38,23 @@ func NewEVKStore(dir string) (*EVKStore, error) {
 		dir:   dir,
 		index: make(map[EVKIdentifier]string),
 	}, nil
+}
+
+// EnableDirectIO switches the store to use O_DIRECT for all subsequent
+// SaveAll/Load calls. This bypasses the OS page cache so EVK bytes do not
+// linger in DRAM after use. Only supported on Linux; on other platforms,
+// subsequent writes/reads will fail with a clear error.
+//
+// Must be called before SaveAll. Toggling between modes for the same store
+// is not supported (existing files written in the other mode will not be
+// readable).
+func (s *EVKStore) EnableDirectIO() {
+	s.useDirectIO = true
+}
+
+// DirectIOEnabled reports whether O_DIRECT is in use.
+func (s *EVKStore) DirectIOEnabled() bool {
+	return s.useDirectIO
 }
 
 // SaveAll serializes all evaluation keys to disk as individual files.
@@ -68,12 +96,31 @@ func (s *EVKStore) saveKey(id EVKIdentifier, swk *rlwe.SwitchingKey) error {
 	}
 
 	path := filepath.Join(s.dir, id.Filename())
-	if err := ioutil.WriteFile(path, data, 0644); err != nil {
+	if err := s.writeFile(path, data); err != nil {
 		return err
 	}
 
+	if s.keyDataLen == 0 {
+		s.keyDataLen = len(data)
+	}
 	s.index[id] = path
 	return nil
+}
+
+// writeFile dispatches to the direct-I/O path or the regular buffered path.
+func (s *EVKStore) writeFile(path string, data []byte) error {
+	if s.useDirectIO {
+		return writeFileDirect(path, data)
+	}
+	return ioutil.WriteFile(path, data, 0644)
+}
+
+// readFile dispatches to the direct-I/O path or the regular buffered path.
+func (s *EVKStore) readFile(path string) ([]byte, error) {
+	if s.useDirectIO {
+		return readFileDirect(path)
+	}
+	return ioutil.ReadFile(path)
 }
 
 // Load reads a single SwitchingKey from disk by its identifier.
@@ -83,7 +130,7 @@ func (s *EVKStore) Load(id EVKIdentifier) (*rlwe.SwitchingKey, error) {
 		return nil, fmt.Errorf("evkstore: key not found: %s", id)
 	}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := s.readFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("evkstore: read %s: %w", id, err)
 	}
@@ -127,9 +174,15 @@ func (s *EVKStore) LoadLatency() time.Duration {
 	return total / trials
 }
 
-// KeySize returns the on-disk byte size of a single stored key.
+// KeySize returns the logical byte size of a single stored key.
 // Returns 0 if no keys are stored.
+//
+// In direct-I/O mode the on-disk file is padded up to a block boundary;
+// this method returns the unpadded payload size recorded at save time.
 func (s *EVKStore) KeySize() int {
+	if s.useDirectIO {
+		return s.keyDataLen
+	}
 	for _, path := range s.index {
 		info, err := os.Stat(path)
 		if err != nil {
@@ -167,5 +220,6 @@ func (s *EVKStore) Cleanup() error {
 		}
 	}
 	s.index = make(map[EVKIdentifier]string)
+	s.keyDataLen = 0
 	return nil
 }

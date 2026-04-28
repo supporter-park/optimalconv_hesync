@@ -21,7 +21,7 @@ go get -u github.com/supporter-park/optimalconv_hesync
 0. Dataset Preparation: **Necessary** to run the tests  
 
 - Download the data file from the link: https://drive.google.com/drive/folders/1zLTzJ58E_CDtqvnPv8t9YtgkDaHouWWn?usp=sharing  
-- Move all folders (Resnet_enc_results, Resnet_plain_data, Resnet_weights, test_conv_data) to the same directory as the source code.  
+- Move all folders (Resnet_enc_results, Resnet_plain_data, Resnet_weights, test_conv_data) to sibling directory named 'datasets'.
 
 
 The following tests are available:   
@@ -84,4 +84,4 @@ It will generate an executable titled "test_run", which can run on the server wi
 ./test_run conv 3 1 5
 ```  
 With this command, one can run the test on any server without Go (given that executable is generated from other device with Go for compile).  
-The executable must be in the same directory as data folders (Resnet_enc_results, Resnet_plain_data, Resnet_weights, test_conv_data).
+The executable must be in the same directory as data folders (../datasets/Resnet_enc_results, ../datasets/Resnet_plain_data, ../datasets/Resnet_weights, ../datasets/test_conv_data).

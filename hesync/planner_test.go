@@ -262,6 +262,66 @@ func TestPlannerBootstrapConsumesDuration(t *testing.T) {
 	require.True(t, plan.Instructions[1].HasSync())
 }
 
+func TestPlannerLazyLoadColocatesFetchSync(t *testing.T) {
+	// LazyLoad places Fetch+Sync at every EVK-requiring operation.
+	// No prefetching: keys are loaded right when needed.
+
+	relinEVK := EVKIdentifier{Type: RelinKey, GaloisEl: 0}
+	rotEVK := EVKIdentifier{Type: RotationKey, GaloisEl: 7}
+
+	trace := &Trace{
+		Entries: []TraceEntry{
+			{OpIndex: 0, OpType: "Add", InputLevel: 3, OutputLevel: 3},
+			{OpIndex: 1, OpType: "MulRelin", InputLevel: 3, OutputLevel: 3, EVKs: []EVKIdentifier{relinEVK}},
+			{OpIndex: 2, OpType: "Add", InputLevel: 3, OutputLevel: 3},
+			{OpIndex: 3, OpType: "Rotate", InputLevel: 3, OutputLevel: 3, EVKs: []EVKIdentifier{rotEVK}},
+		},
+		MaxLevel: 5,
+	}
+
+	profile := syntheticProfile(10*time.Millisecond, 25*time.Millisecond, 5)
+	plan := GeneratePlan(trace, profile, CriterionLazyLoad)
+
+	require.Equal(t, 4, len(plan.Instructions))
+	require.Equal(t, CriterionLazyLoad, plan.Criterion)
+
+	// Index 0: Add — no EVKs, Nop
+	require.True(t, plan.Instructions[0].IsNop())
+
+	// Index 1: MulRelin — Fetch+Sync co-located
+	require.True(t, plan.Instructions[1].HasFetch())
+	require.True(t, plan.Instructions[1].HasSync())
+	require.Equal(t, []EVKIdentifier{relinEVK}, plan.Instructions[1].FetchEVKs)
+	require.Equal(t, []EVKIdentifier{relinEVK}, plan.Instructions[1].SyncEVKs)
+
+	// Index 2: Add — Nop
+	require.True(t, plan.Instructions[2].IsNop())
+
+	// Index 3: Rotate — Fetch+Sync co-located
+	require.True(t, plan.Instructions[3].HasFetch())
+	require.True(t, plan.Instructions[3].HasSync())
+	require.Equal(t, []EVKIdentifier{rotEVK}, plan.Instructions[3].FetchEVKs)
+	require.Equal(t, []EVKIdentifier{rotEVK}, plan.Instructions[3].SyncEVKs)
+}
+
+func TestPlannerLazyLoadNoEVKOps(t *testing.T) {
+	// LazyLoad on a trace with no EVK ops: all Nop.
+	trace := &Trace{
+		Entries: []TraceEntry{
+			{OpIndex: 0, OpType: "Add", InputLevel: 3, OutputLevel: 3},
+			{OpIndex: 1, OpType: "Sub", InputLevel: 3, OutputLevel: 3},
+		},
+		MaxLevel: 5,
+	}
+
+	profile := syntheticProfile(10*time.Millisecond, 15*time.Millisecond, 5)
+	plan := GeneratePlan(trace, profile, CriterionLazyLoad)
+
+	for i, inst := range plan.Instructions {
+		require.True(t, inst.IsNop(), "instruction %d should be Nop", i)
+	}
+}
+
 func TestPlannerConsecutiveEVKOps(t *testing.T) {
 	// Two consecutive EVK operations: [MulRelin, Rotate]
 	// Each needs its own Fetch+Sync pair.

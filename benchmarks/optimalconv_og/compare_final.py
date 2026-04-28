@@ -8,12 +8,12 @@ from statistics import mean, stdev
 def compare_results(ker, depth, wid, cf100):    
 
     if cf100:
-        plain_folder_dir = 'Resnet_plain_data/cf100_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)
-        enc_result_dir = 'Resnet_enc_results/results_cf100_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)+'/'
+        plain_folder_dir = '../datasets/Resnet_plain_data/cf100_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)
+        enc_result_dir = '../datasets/Resnet_enc_results/results_cf100_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)+'/'
         num_classes = 100
     else:
-        plain_folder_dir = 'Resnet_plain_data/crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)
-        enc_result_dir = 'Resnet_enc_results/results_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)+'/'
+        plain_folder_dir = '../datasets/Resnet_plain_data/crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)
+        enc_result_dir = '../datasets/Resnet_enc_results/results_crop_ker'+str(ker)+'_d'+str(depth)+'_wid'+str(wid)+'/'
         num_classes = 10
 
     if wid == 1:

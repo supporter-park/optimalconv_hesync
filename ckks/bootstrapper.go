@@ -115,6 +115,39 @@ func newBootstrapper(params Parameters, btpParams *BootstrappingParameters) (btp
 	return btp
 }
 
+// SetKeys swaps the bootstrapping keys used by an existing Bootstrapper.
+// This enables HESync to page bootstrap rotation keys in/out of memory
+// without reconstructing the (expensive) precomputed DFT matrices and
+// sine polynomial.
+//
+// The caller is responsible for ensuring btpKey contains all rotation keys
+// required by this bootstrapper; CheckKeys is invoked to verify.
+func (btp *Bootstrapper) SetKeys(btpKey BootstrappingKey) error {
+	btp.BootstrappingKey = &BootstrappingKey{btpKey.Rlk, btpKey.Rtks}
+	if err := btp.CheckKeys(); err != nil {
+		return err
+	}
+	btp.evaluator = btp.evaluator.WithKey(rlwe.EvaluationKey{Rlk: btpKey.Rlk, Rtks: btpKey.Rtks}).(*evaluator)
+	return nil
+}
+
+// PreparePermuteNTTIndex precomputes NTT permutation indexes on the
+// bootstrapper's internal evaluator for the given Galois elements. Combined
+// with SetKeys, this allows the bootstrapper to run against an rtks whose
+// SwitchingKeys are loaded lazily from disk.
+func (btp *Bootstrapper) PreparePermuteNTTIndex(galEls []uint64) {
+	btp.evaluator.PreparePermuteNTTIndex(galEls)
+}
+
+// RotKeyIndex returns the internal rotations (by column shift amount) that
+// this bootstrapper requires. The corresponding Galois elements can be
+// derived via params.GaloisElementForColumnRotationBy.
+func (btp *Bootstrapper) RotKeyIndex() []int {
+	out := make([]int, len(btp.rotKeyIndex))
+	copy(out, btp.rotKeyIndex)
+	return out
+}
+
 // CheckKeys checks if all the necessary keys are present
 func (btp *Bootstrapper) CheckKeys() (err error) {
 

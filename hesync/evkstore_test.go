@@ -182,6 +182,68 @@ func TestEVKStoreCleanup(t *testing.T) {
 	require.Equal(t, 0, store.Count())
 }
 
+func TestEVKStoreDirectIORoundTrip(t *testing.T) {
+	dir, err := os.MkdirTemp("", "evkstore_directio_test")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+
+	store, err := NewEVKStore(dir)
+	require.NoError(t, err)
+	store.EnableDirectIO()
+	require.True(t, store.DirectIOEnabled())
+
+	// Use a payload large enough to exercise multi-block writes (>4 KiB)
+	// and small enough to keep the test fast.
+	N := 1024
+	levels := 4
+	decomp := 3
+
+	rlk := &rlwe.RelinearizationKey{
+		Keys: []*rlwe.SwitchingKey{newTestSwitchingKey(decomp, N, levels)},
+	}
+
+	rtks := &rlwe.RotationKeySet{
+		Keys: map[uint64]*rlwe.SwitchingKey{
+			5:  newTestSwitchingKey(decomp, N, levels),
+			17: newTestSwitchingKey(decomp, N, levels),
+		},
+	}
+
+	err = store.SaveAll(rlk, rtks)
+	require.NoError(t, err)
+	require.Equal(t, 3, store.Count())
+
+	// KeySize should report the logical (unpadded) payload size, not the
+	// on-disk padded size.
+	rawBytes, err := rlk.Keys[0].MarshalBinary()
+	require.NoError(t, err)
+	require.Equal(t, len(rawBytes), store.KeySize())
+
+	// Round-trip relin key.
+	relinID := EVKIdentifier{Type: RelinKey, GaloisEl: 0}
+	loadedRelin, err := store.Load(relinID)
+	require.NoError(t, err)
+	require.True(t, rlk.Keys[0].Equals(loadedRelin),
+		"relin key direct-IO round-trip mismatch")
+
+	// Round-trip rotation keys.
+	for galEl, origSwk := range rtks.Keys {
+		rotID := EVKIdentifier{Type: RotationKey, GaloisEl: galEl}
+		loadedRot, err := store.Load(rotID)
+		require.NoError(t, err)
+		require.True(t, origSwk.Equals(loadedRot),
+			"rotation key %d direct-IO round-trip mismatch", galEl)
+	}
+
+	// On-disk file size must be a multiple of the alignment.
+	for _, id := range store.AllIDs() {
+		info, err := os.Stat(store.index[id])
+		require.NoError(t, err)
+		require.Equal(t, int64(0), info.Size()%4096,
+			"file %s size %d not aligned", id, info.Size())
+	}
+}
+
 func TestEVKIdentifierString(t *testing.T) {
 	require.Equal(t, "relin_0", EVKIdentifier{Type: RelinKey}.String())
 	require.Equal(t, "rot_42", EVKIdentifier{Type: RotationKey, GaloisEl: 42}.String())

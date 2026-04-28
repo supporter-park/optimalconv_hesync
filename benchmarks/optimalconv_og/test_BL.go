@@ -15,7 +15,7 @@ import (
 // use imaginary part to save before boot
 func testConv_BL_in(real_batch, in_wid, ker_wid, total_test_num int, boot bool) {
 	in_kind := "Conv"
-	test_dir := "test_conv_data/"
+	test_dir := "../datasets/test_conv_data/"
 	if (in_kind != "TransConv") && (in_kind != "Conv") && (in_kind != "StrConv") {
 		panic("Wrong in_kind!")
 	}

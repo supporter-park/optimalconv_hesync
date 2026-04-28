@@ -18,7 +18,7 @@ func testConv_in(in_batch, in_wid, ker_wid, total_test_num int, boot bool) {
 	raw_in_batch := in_batch         // same as python
 	raw_in_wid := in_wid - ker_wid/2 // same as python
 	norm := in_batch / raw_in_batch
-	test_dir := "test_conv_data/"
+	test_dir := "../datasets/test_conv_data/"
 	pow := 4.0
 
 	// set basic variables for above input variables
@@ -76,15 +76,15 @@ func testConv_in(in_batch, in_wid, ker_wid, total_test_num int, boot bool) {
 func testResNet_crop_sparse(st, end, ker_wid, depth int, debug, cf100 bool) {
 	// init_batch fixed to 16
 	ker_name := "ker" + strconv.Itoa(ker_wid)
-	weight_dir := "Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/" // !! NEED to remove "_test"
-	out_dir := "Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+	weight_dir := "../datasets/Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/" // !! NEED to remove "_test"
+	out_dir := "../datasets/Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
 	fc_out := 10    // 100 for cifar100
 	init_pow := 6.0 // covers [-2^pow, 2^pow] values at ReLU evaluation
 	mid_pow := 6.0
 	final_pow := 6.0
 	if cf100 {
-		weight_dir = "Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
-		out_dir = "Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+		weight_dir = "../datasets/Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+		out_dir = "../datasets/Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
 		fc_out = 100 // 100 for cifar100
 		if ker_wid == 3 {
 			final_pow = 7.0
@@ -127,13 +127,13 @@ func testResNet_crop_sparse(st, end, ker_wid, depth int, debug, cf100 bool) {
 
 	for iter := st; iter < end; iter++ {
 		fmt.Println("Running ", iter, "-th iter... ker size: ", ker_wid)
-		image := readTxt("Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+		image := readTxt("../datasets/Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		// image := make([]float64, in_wids[0]*in_wids[0]*3)
 		// for i := range image {
 		// 	image[i] = 1.0 - 1.0*float64(i)/float64(len(image))
 		// }
 		if cf100 {
-			image = readTxt("Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+			image = readTxt("../datasets/Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		}
 		input := make([]float64, cont.N)
 		k := 0
@@ -372,15 +372,15 @@ func testResNet_crop_sparse(st, end, ker_wid, depth int, debug, cf100 bool) {
 func testResNet_crop_fast_in(st, end, ker_wid, depth int, debug, cf100 bool) {
 	// init_batch fixed to 16
 	ker_name := "ker" + strconv.Itoa(ker_wid)
-	weight_dir := "Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
-	out_dir := "Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+	weight_dir := "../datasets/Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+	out_dir := "../datasets/Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
 	fc_out := 10    // 100 for cifar100
 	init_pow := 6.0 // covers [-2^pow, 2^pow] values at ReLU evaluation
 	mid_pow := 6.0
 	final_pow := 6.0
 	if cf100 {
-		weight_dir = "Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
-		out_dir = "Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+		weight_dir = "../datasets/Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
+		out_dir = "../datasets/Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid1/"
 		fc_out = 100 // 100 for cifar100
 		if ker_wid == 3 {
 			final_pow = 7.0
@@ -429,9 +429,9 @@ func testResNet_crop_fast_in(st, end, ker_wid, depth int, debug, cf100 bool) {
 
 	for iter := st; iter < end; iter++ {
 		fmt.Println("Running ", iter, "-th iter... ker size: ", ker_wid)
-		image := readTxt("Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+		image := readTxt("../datasets/Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		if cf100 {
-			image = readTxt("Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+			image = readTxt("../datasets/Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid1/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		}
 		input := make([]float64, cont.N)
 		k := 0
@@ -638,8 +638,8 @@ func testResNet_crop_fast_in(st, end, ker_wid, depth int, debug, cf100 bool) {
 func testResNet_crop_sparse_wide(st, end, ker_wid, depth, wide_case int, debug, cf100 bool) {
 	// init_batch fixed to 16
 	ker_name := "ker" + strconv.Itoa(ker_wid)
-	weight_dir := "Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
-	out_dir := "Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+	weight_dir := "../datasets/Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+	out_dir := "../datasets/Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
 	fc_out := 10
 
 	init_pow := 5.0
@@ -652,8 +652,8 @@ func testResNet_crop_sparse_wide(st, end, ker_wid, depth, wide_case int, debug, 
 	}
 
 	if cf100 {
-		weight_dir = "Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
-		out_dir = "Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+		weight_dir = "../datasets/Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+		out_dir = "../datasets/Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
 		fc_out = 100
 		final_pow = 7.0
 		init_pow = 5.0
@@ -707,10 +707,10 @@ func testResNet_crop_sparse_wide(st, end, ker_wid, depth, wide_case int, debug, 
 
 	for iter := st; iter < end; iter++ {
 		fmt.Println("Running ", iter, "-th iter... ker size: ", ker_wid)
-		image := readTxt("Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+		image := readTxt("../datasets/Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 
 		if cf100 {
-			image = readTxt("Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+			image = readTxt("../datasets/Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		}
 		input := make([]float64, cont.N)
 		k := 0
@@ -914,8 +914,8 @@ func testResNet_crop_sparse_wide(st, end, ker_wid, depth, wide_case int, debug, 
 func testResNet_crop_fast_wide_in(st, end, ker_wid, depth, wide_case int, debug, cf100 bool) {
 	// init_batch fixed to 16
 	ker_name := "ker" + strconv.Itoa(ker_wid)
-	weight_dir := "Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
-	out_dir := "Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+	weight_dir := "../datasets/Resnet_weights/weights_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+	out_dir := "../datasets/Resnet_enc_results/results_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
 	fc_out := 10 // 100 for cifar100
 
 	init_pow := 5.0
@@ -928,8 +928,8 @@ func testResNet_crop_fast_wide_in(st, end, ker_wid, depth, wide_case int, debug,
 	}
 
 	if cf100 {
-		weight_dir = "Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
-		out_dir = "Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+		weight_dir = "../datasets/Resnet_weights/weights_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
+		out_dir = "../datasets/Resnet_enc_results/results_cf100_crop_" + ker_name + "_d" + strconv.Itoa(depth) + "_wid" + strconv.Itoa(wide_case) + "/"
 		fc_out = 100 // 100 for cifar100
 		final_pow = 7.0
 		init_pow = 5.0
@@ -986,9 +986,9 @@ func testResNet_crop_fast_wide_in(st, end, ker_wid, depth, wide_case int, debug,
 
 	for iter := st; iter < end; iter++ {
 		fmt.Println("Running ", iter, "-th iter... ker size: ", ker_wid)
-		image := readTxt("Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+		image := readTxt("../datasets/Resnet_plain_data/crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		if cf100 {
-			image = readTxt("Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
+			image = readTxt("../datasets/Resnet_plain_data/cf100_crop_ker"+strconv.Itoa(ker_wid)+"_d"+strconv.Itoa(depth)+"_wid"+strconv.Itoa(wide_case)+"/test_image_"+strconv.Itoa(iter)+".csv", in_wids[0]*in_wids[0]*3)
 		}
 		input := make([]float64, cont.N)
 		k := 0

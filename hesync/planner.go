@@ -97,6 +97,22 @@ func GeneratePlan(trace *Trace, profile *Profile, criterion PlanCriterion) *Plan
 	n := len(trace.Entries)
 	instructions := make([]PlanInstruction, n)
 
+	// Lazy load: place Fetch+Sync at every EVK-requiring operation.
+	// No prefetching — keys are loaded synchronously at the start of each op.
+	if criterion == CriterionLazyLoad {
+		for i, entry := range trace.Entries {
+			if len(entry.EVKs) > 0 {
+				instructions[i].FetchEVKs = append(instructions[i].FetchEVKs, entry.EVKs...)
+				instructions[i].SyncEVKs = append(instructions[i].SyncEVKs, entry.EVKs...)
+			}
+		}
+		return &Plan{
+			Instructions: instructions,
+			Trace:        trace,
+			Criterion:    criterion,
+		}
+	}
+
 	// Active pending fetches: timers counting down as we walk backward.
 	var pending []*pendingFetch
 

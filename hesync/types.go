@@ -41,6 +41,7 @@ const (
 	CriterionHalfMax                       // Use maxLevel/2 profile
 	CriterionMaxLevel                      // Use maxLevel profile (slowest ops, least slack)
 	CriterionPerTrace                      // Use each entry's actual level (HESync design target)
+	CriterionLazyLoad                      // Load EVKs at the start of each operation (no prefetch)
 )
 
 func (c PlanCriterion) String() string {
@@ -53,6 +54,8 @@ func (c PlanCriterion) String() string {
 		return "MaxLevel"
 	case CriterionPerTrace:
 		return "PerTrace"
+	case CriterionLazyLoad:
+		return "LazyLoad"
 	default:
 		return "Unknown"
 	}

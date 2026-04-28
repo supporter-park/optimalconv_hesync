@@ -1,2 +1,10 @@
 /docs/
 CLAUDE.md
+/.claude
+
+/benchmarks/datasets/Resnet_enc_results/
+/benchmarks/datasets/Resnet_plain_data/
+/benchmarks/datasets/Resnet_weights/
+/benchmarks/datasets/test_conv_data/
+
+/benchmarks/hesync_evks/

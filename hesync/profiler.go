@@ -45,6 +45,10 @@ func (p *Profile) GetDuration(entry TraceEntry, criterion PlanCriterion) time.Du
 		level = p.MaxLevel
 	case CriterionPerTrace:
 		level = entry.InputLevel
+	case CriterionLazyLoad:
+		// LazyLoad does not use profiled durations for planning;
+		// return 0 so the planner's reverse-walk is never reached.
+		return 0
 	}
 
 	if d, ok := timings[level]; ok {
@@ -76,6 +80,9 @@ type Profiler struct {
 	params ckks.Parameters
 	// iterations is the number of times each operation is timed for averaging.
 	iterations int
+	// evk is set during ProfileFromTrace so opFunc can pick a galois element
+	// that actually exists in the evaluator's rotation key set.
+	evk rlwe.EvaluationKey
 }
 
 // NewProfiler creates a new Profiler.
@@ -91,6 +98,32 @@ func (pr *Profiler) SetIterations(n int) {
 	if n > 0 {
 		pr.iterations = n
 	}
+}
+
+// anyAvailableGalEl returns a non-row galois element present in the current
+// evk's rotation key set, preferring the smallest positive k. Returns 0 if
+// there is no usable rotation key (caller must treat 0 as "skip this op").
+func (pr *Profiler) anyAvailableGalEl() uint64 {
+	if pr.evk.Rtks == nil || len(pr.evk.Rtks.Keys) == 0 {
+		return 0
+	}
+	rowGal := pr.params.GaloisElementForRowRotation()
+	// Prefer a column rotation (not the row/conjugation one) for consistent
+	// profiling behavior.
+	var fallback uint64
+	for galEl := range pr.evk.Rtks.Keys {
+		if galEl == rowGal {
+			continue
+		}
+		if fallback == 0 || galEl < fallback {
+			fallback = galEl
+		}
+	}
+	if fallback != 0 {
+		return fallback
+	}
+	// Only the row-rotation key is present — better than nothing.
+	return rowGal
 }
 
 // ProfileFromTrace profiles all operations that appear in the trace.
@@ -117,6 +150,7 @@ func (pr *Profiler) ProfileFromTrace(trace *Trace, evk rlwe.EvaluationKey, evkSt
 
 	// Create a real evaluator for profiling
 	eval := ckks.NewEvaluator(pr.params, evk)
+	pr.evk = evk
 
 	// Profile each (OpType, Level) pair
 	for key := range needed {
@@ -221,14 +255,34 @@ func (pr *Profiler) opFunc(eval ckks.Evaluator, opType string, ct0, ct1, ctOut *
 		eval.Mul(ct0, ct1, ct2)
 		return func() { eval.Relinearize(ct2, ctOut) }
 	case "Rotate":
-		return func() { eval.Rotate(ct0, 1, ctOut) }
+		galEl := pr.anyAvailableGalEl()
+		if galEl == 0 {
+			return nil
+		}
+		return func() { eval.RotateGal(ct0, galEl, ctOut) }
 	case "RotateGal":
-		galEl := pr.params.GaloisElementForColumnRotationBy(1)
+		galEl := pr.anyAvailableGalEl()
+		if galEl == 0 {
+			return nil
+		}
 		return func() { eval.RotateGal(ct0, galEl, ctOut) }
 	case "Conjugate":
+		// Conjugate needs the row-rotation galois element.
+		if pr.evk.Rtks == nil {
+			return nil
+		}
+		rowGal := pr.params.GaloisElementForRowRotation()
+		if _, ok := pr.evk.Rtks.Keys[rowGal]; !ok {
+			return nil
+		}
 		return func() { eval.Conjugate(ct0, ctOut) }
 	case "RotateHoisted":
-		return func() { eval.RotateHoisted(ct0, []int{1}) }
+		galEl := pr.anyAvailableGalEl()
+		if galEl == 0 {
+			return nil
+		}
+		k := int(pr.params.InverseGaloisElement(galEl))
+		return func() { eval.RotateHoisted(ct0, []int{k}) }
 	case "Rescale":
 		if level == 0 {
 			return nil // Cannot rescale at level 0
