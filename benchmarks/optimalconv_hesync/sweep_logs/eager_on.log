@@ -1,0 +1,3 @@
+CKKS parameters: logN = 16, logSlots = 15, h = 192, logQP = 1553, levels = 28, scale= 2^30.000000, sigma = 3.200000 
+Num Rotations:  98
+Generating bootstrapping keys...

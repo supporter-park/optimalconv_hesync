@@ -5,12 +5,28 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/supporter-park/optimalconv_hesync/ckks"
 	"github.com/supporter-park/optimalconv_hesync/hesync"
 	"github.com/supporter-park/optimalconv_hesync/rlwe"
 )
+
+// hesyncEagerPrefetch controls whether the PagedBootstrapper kicks off
+// async boot-key loads after each Bootstrapp returns. Defaults to on.
+// Set HESYNC_EAGER_PREFETCH=0 (or false/no/off) to disable — useful for
+// the bounding experiment that measures how much PeakRSS is being held
+// hostage by eager prefetch and how much latency that recovers.
+func hesyncEagerPrefetch() bool {
+	v := strings.ToLower(strings.TrimSpace(os.Getenv("HESYNC_EAGER_PREFETCH")))
+	switch v {
+	case "0", "false", "no", "off":
+		return false
+	}
+	return true
+}
 
 // HESync now wraps three resident key sets:
 //   - cont.evaluator        (main non-boot rotation keys + rlk) — prefetched via plan
@@ -117,14 +133,14 @@ func buildPagedBootstrapper(cont *context, bootStore *hesync.EVKStore) *hesync.P
 }
 
 // runHESyncPipeline drives the full HESync pipeline:
-//   1. Save 3 keysets to disk.
-//   2. Trace phase: two tracer evaluators replace cont.evaluator and
-//      cont.pack_evaluator; hesyncTracing=true short-circuits bootstrap.
-//   3. Profile main + pack separately against their respective stores.
-//   4. For each plan criterion, run with:
-//        - HESyncEvaluator wrapping cont.evaluator  (main prefetcher)
-//        - HESyncEvaluator wrapping cont.pack_evaluator (pack prefetcher)
-//        - PagedBootstrapper pinned to cont.btp* (boot keys paged per call)
+//  1. Save 3 keysets to disk.
+//  2. Trace phase: two tracer evaluators replace cont.evaluator and
+//     cont.pack_evaluator; hesyncTracing=true short-circuits bootstrap.
+//  3. Profile main + pack separately against their respective stores.
+//  4. For each plan criterion, run with:
+//     - HESyncEvaluator wrapping cont.evaluator  (main prefetcher)
+//     - HESyncEvaluator wrapping cont.pack_evaluator (pack prefetcher)
+//     - PagedBootstrapper pinned to cont.btp* (boot keys paged per call)
 func runHESyncPipeline(cont *context, label string, runIter func(iters int), totalIters int) {
 	fmt.Println()
 	fmt.Println("=======================================================")
@@ -185,6 +201,10 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 	cont.evaluator = origMainEval
 	cont.pack_evaluator = origPackEval
 
+	// Reset VmHWM so subsequent peakRSS readings (postArm + per-criterion)
+	// reflect only post-baseline allocations rather than the trace-pass peak.
+	resetVmHWM()
+
 	// --- Step 3: profile ---
 	profileStart := time.Now()
 	mainProfiler := hesync.NewProfiler(cont.params)
@@ -209,10 +229,54 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 		// external reference so the original boot keys can be GC'd.
 		pagedBtp.Arm()
 		cont.btpRtks = nil
-		runtime.GC()
-		fmt.Printf("HESync: bootstrap keys paged (resident only during Bootstrapp calls). postArm peakRSS=%d KB\n",
-			readPeakRSSKB())
+		// Boot keys are loaded as one atomic unit, so the Tracer/Planner pipeline
+		// can't schedule them at sub-bootstrap granularity. Three walk-arounds
+		// stack to hide the cost:
+		//   - Eager prefetch: kick off an async load right after each freeKeys
+		//     so the next call's load overlaps with workload compute.
+		//   - Hold keys across the CtoS/StoC pair: avoid the redundant StoC
+		//     reload (the same keys are needed twice in a row, separated only
+		//     by ReLU).
+		//   - Parallel disk I/O within a single load (set via SetLoadParallelism).
+		pagedBtp.SetLoadParallelism(8)
+		eager := hesyncEagerPrefetch()
+		if eager {
+			pagedBtp.EnableEagerPrefetch()
+		}
+		fmt.Printf("HESync: paged bootstrapper armed (eager prefetch=%v)\n", eager)
 	}
+
+	// --- Step 5: drop ALL resident key references so Go can reclaim them ---
+	// After this point, the only resident key material is what the paged
+	// bootstrapper holds (briefly, around each Bootstrapp call) and what each
+	// criterion's Prefetcher loads on demand. We capture the galois-element
+	// list first because PreparePermuteNTTIndex needs it inside the loop.
+	mainGalEls := collectGalEls(cont.rotkeys)
+	packGalEls := collectGalEls(cont.packRtks)
+
+	cont.evaluator = nil
+	cont.pack_evaluator = nil
+	origMainEval = nil
+	origPackEval = nil
+	cont.rotkeys = nil
+	cont.packRtks = nil
+	cont.rlk = nil
+	mainEvalKey = rlwe.EvaluationKey{}
+	packEvalKey = rlwe.EvaluationKey{}
+
+	// Force GC, then ask the runtime to release pages back to the OS.
+	// On Linux, Go's default unmap path uses MADV_FREE, which leaves the
+	// pages charged to RSS until the kernel reclaims them under pressure.
+	// Run with GODEBUG=madvdontneed=1 to make FreeOSMemory issue
+	// MADV_DONTNEED instead, so RSS drops immediately.
+	runtime.GC()
+	debug.FreeOSMemory()
+
+	// Reset VmHWM so postArm and per-criterion peakRSS reflect only
+	// allocations observed *after* keysets were dropped.
+	resetVmHWM()
+	fmt.Printf("HESync: bootstrap keys paged + main/pack keysets dropped. postArm peakRSS=%d KB\n",
+		readPeakRSSKB())
 
 	// --- Step 6: run per criterion ---
 	criteria := []hesync.PlanCriterion{
@@ -228,7 +292,8 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 		latency   time.Duration
 		peakEVKs  int
 		stall     time.Duration
-		bootLoad  time.Duration
+		bootLoad  time.Duration // critical-path boot-key load time
+		bootAsync time.Duration // boot-key load time hidden by eager prefetch
 		rssKB     int64
 		heapMB    float64
 	}
@@ -241,37 +306,33 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 			Rlk:  mainContainer.RelinearizationKey(),
 			Rtks: mainContainer.RotationKeySet(),
 		})
-		if cont.rotkeys != nil {
-			galEls := make([]uint64, 0, len(cont.rotkeys.Keys))
-			for g := range cont.rotkeys.Keys {
-				galEls = append(galEls, g)
-			}
-			innerMain.PreparePermuteNTTIndex(galEls)
+		if len(mainGalEls) > 0 {
+			innerMain.PreparePermuteNTTIndex(mainGalEls)
 		}
 		mainPrefetcher := hesync.NewPrefetcher(mainPlan, mainStore, mainContainer)
 		cont.evaluator = hesync.NewHESyncEvaluator(innerMain, mainPrefetcher)
 
 		var packContainer *hesync.EVKContainer
 		var packPrefetcher *hesync.Prefetcher
-		if packProfile != nil && cont.packRtks != nil {
+		if packProfile != nil && len(packGalEls) > 0 {
 			packPlan := hesync.GeneratePlan(packTrace, packProfile, crit)
 			packContainer = hesync.NewEVKContainer()
 			innerPack := ckks.NewEvaluator(cont.packParams, rlwe.EvaluationKey{
 				Rtks: packContainer.RotationKeySet(),
 			})
-			galEls := make([]uint64, 0, len(cont.packRtks.Keys))
-			for g := range cont.packRtks.Keys {
-				galEls = append(galEls, g)
-			}
-			innerPack.PreparePermuteNTTIndex(galEls)
+			innerPack.PreparePermuteNTTIndex(packGalEls)
 			packPrefetcher = hesync.NewPrefetcher(packPlan, packStore, packContainer)
 			cont.pack_evaluator = hesync.NewHESyncEvaluator(innerPack, packPrefetcher)
 		} else {
-			cont.pack_evaluator = origPackEval
+			cont.pack_evaluator = nil
 		}
 
 		hesyncSkipDecrypt = false
 		runtime.GC()
+		debug.FreeOSMemory()
+		// Reset VmHWM so this criterion's PeakRSS reflects only its own peak,
+		// not the cumulative high-water from earlier passes / criteria.
+		resetVmHWM()
 		runtime.ReadMemStats(&memBefore)
 		startT := time.Now()
 		runIter(totalIters)
@@ -286,9 +347,10 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 		if packContainer != nil {
 			peakEVKs += packContainer.PeakCount()
 		}
-		var bootLoad time.Duration
+		var bootLoad, bootAsync time.Duration
 		if pagedBtp != nil {
 			bootLoad = pagedBtp.TotalLoadTime()
+			bootAsync = pagedBtp.TotalAsyncLoadTime()
 		}
 		rows = append(rows, row{
 			criterion: crit,
@@ -296,6 +358,7 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 			peakEVKs:  peakEVKs,
 			stall:     stall,
 			bootLoad:  bootLoad,
+			bootAsync: bootAsync,
 			rssKB:     readPeakRSSKB(),
 			heapMB:    float64(memAfter.HeapSys) / (1024 * 1024),
 		})
@@ -306,9 +369,17 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 		}
 	}
 
-	// restore
-	cont.evaluator = origMainEval
-	cont.pack_evaluator = origPackEval
+	// Snapshot per-btp call counts before clearing the paged bootstrapper.
+	// Counts are cumulative across all criteria executed above; with a
+	// single criterion they reflect one full workload run.
+	var perBtpCtoS, perBtpStoC, perBtpFull []int
+	if pagedBtp != nil {
+		perBtpCtoS, perBtpStoC, perBtpFull = pagedBtp.PerBtpCalls()
+	}
+
+	// Caller does not reuse cont after this point; original evaluator
+	// references were dropped above so leave them nil. Just clear the
+	// paged-bootstrap pointer so a subsequent pipeline run doesn't see it.
 	pagedBtp = nil
 
 	// --- Step 7: report ---
@@ -320,17 +391,35 @@ func runHESyncPipeline(cont *context, label string, runIter func(iters int), tot
 	fmt.Printf("Trace (pack):   %d ops\n", len(packTrace.Entries))
 	fmt.Printf("Baseline:       latency=%v  heapSys=%.0f MB  peakRSS=%d KB\n",
 		baseLatency.Round(time.Millisecond), baseHeapMB, baseRSS)
-	fmt.Printf("%-10s %12s %10s %10s %10s %12s %10s\n",
-		"Criterion", "Latency", "PeakEVKs", "Stall", "BootLoad", "PeakRSS(KB)", "HeapSys(MB)")
+	fmt.Printf("%-10s %12s %10s %10s %12s %12s %12s %10s\n",
+		"Criterion", "Latency", "PeakEVKs", "Stall", "BootLoad", "BootAsync", "PeakRSS(KB)", "HeapSys(MB)")
 	for _, r := range rows {
-		fmt.Printf("%-10s %12v %10d %10v %10v %12d %10.0f\n",
+		fmt.Printf("%-10s %12v %10d %10v %12v %12v %12d %10.0f\n",
 			r.criterion,
 			r.latency.Round(time.Millisecond),
 			r.peakEVKs,
 			r.stall.Round(time.Millisecond),
 			r.bootLoad.Round(time.Millisecond),
+			r.bootAsync.Round(time.Millisecond),
 			r.rssKB,
 			r.heapMB)
+	}
+
+	if len(perBtpCtoS) > 0 {
+		fmt.Println()
+		fmt.Println("---  Per-btp call counts (cumulative across criteria)  ---")
+		fmt.Printf("%-7s %10s %10s %10s %10s\n", "btpIdx", "CtoS", "StoC", "Full", "Total")
+		var totCtoS, totStoC, totFull int
+		for i := range perBtpCtoS {
+			tot := perBtpCtoS[i] + perBtpStoC[i] + perBtpFull[i]
+			fmt.Printf("%-7d %10d %10d %10d %10d\n",
+				i, perBtpCtoS[i], perBtpStoC[i], perBtpFull[i], tot)
+			totCtoS += perBtpCtoS[i]
+			totStoC += perBtpStoC[i]
+			totFull += perBtpFull[i]
+		}
+		fmt.Printf("%-7s %10d %10d %10d %10d\n", "all",
+			totCtoS, totStoC, totFull, totCtoS+totStoC+totFull)
 	}
 	fmt.Println("================================================")
 }
@@ -340,6 +429,30 @@ func countIf(s *hesync.EVKStore) int {
 		return 0
 	}
 	return s.Count()
+}
+
+// collectGalEls extracts the galois-element keys from a RotationKeySet so
+// callers can drop their reference to the keyset itself while still being
+// able to (re)build PreparePermuteNTTIndex tables.
+func collectGalEls(rks *rlwe.RotationKeySet) []uint64 {
+	if rks == nil {
+		return nil
+	}
+	out := make([]uint64, 0, len(rks.Keys))
+	for g := range rks.Keys {
+		out = append(out, g)
+	}
+	return out
+}
+
+// resetVmHWM resets the kernel-tracked peak RSS by writing "5" to
+// /proc/self/clear_refs (CLEAR_REFS_MM_HIWATER_RSS, Linux 4.0+).
+// After this, /proc/self/status:VmHWM reflects only allocations
+// observed after the reset.
+func resetVmHWM() {
+	if err := os.WriteFile("/proc/self/clear_refs", []byte("5\n"), 0); err != nil {
+		fmt.Printf("HESync: WARN resetVmHWM failed: %v\n", err)
+	}
 }
 
 func readPeakRSSKB() int64 {

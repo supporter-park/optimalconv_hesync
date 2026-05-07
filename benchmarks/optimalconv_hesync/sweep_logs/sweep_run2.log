@@ -1,0 +1,594 @@
+CKKS parameters: logN = 16, logSlots = 15, h = 192, logQP = 1553, levels = 28, scale= 2^30.000000, sigma = 3.200000 
+Num Rotations:  98
+Generating bootstrapping keys...
+Done in 8m31.352226087s 
+
+=======================================================
+  HESync: resnet ker=3 depth=20 cf100=false
+=======================================================
+HESync: saved keys (main=100, pack=16, boot=137), per-main-key 198.00 MB, io=O_DIRECT
+Running  0 -th iter... ker size:  3
+Input: 
+(1, 1):     [  27.2893,   -24.0561,   -83.5538,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 2):     [  28.8596,   -24.4424,   -84.8536,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 3):     [  33.9496,   -20.2462,   -81.5814,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 30):     [  5.9410,   -41.3070,   -96.4408,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 31):     [  -4.3931,   -44.7085,   -96.0004,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 1):     [  21.9007,   -23.2948,   -80.3641,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 2):     [  21.6554,   -24.4591,   -90.4656,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 3):     [  28.7831,   -21.1767,   -86.1023,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 30):     [  5.9575,   -40.1386,   -99.9002,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 31):     [  -4.3304,   -43.5590,   -98.4992,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 1):     [  21.2753,   -24.6482,   -83.2514,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 2):     [  22.2834,   -24.4975,   -96.0192,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 3):     [  28.5265,   -23.0555,   -93.4759,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 30):     [  9.7893,   -35.9582,   -95.2940,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 31):     [  1.4091,   -38.5415,   -95.0653,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 1):     [  -58.5537,   -1.9533,   62.8579,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 2):     [  -82.5884,   -23.7335,   36.2211,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 3):     [  -92.9251,   -34.8011,   26.2646,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 30):     [  -86.2404,   -26.0034,   35.1291,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 31):     [  -111.6890,   -59.7463,   -3.7512,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 1):     [  -66.0681,   -10.3762,   53.3510,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 2):     [  -76.4690,   -22.5832,   35.3066,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 3):     [  -90.2849,   -39.1869,   19.8319,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 30):     [  -99.4925,   -42.3376,   17.7436,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 31):     [  -96.5861,   -42.6484,   13.2816,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 1):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 2):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 3):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 30):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 31):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+vec size:  65536
+input width:  [31 15 7]
+kernel width:  3
+num batches:  [16 32 64]
+Encryption done in 10.999873ms 
+Plaintext (kernel) preparation, Done in 155.501507ms 
+	 mult time:  83.074791ms
+	 Pack time:  129.869014ms
+Conv (with BN) Done in 213.038078ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.537542768s 
+Eval: ReLU Done in 2.635399131s 
+Boot (StoC) Done in 1.054887732s 
+Block1, Layer  1 done!
+Plaintext (kernel) preparation, Done in 178.951548ms 
+	 mult time:  96.404645ms
+	 Pack time:  131.384297ms
+Conv (with BN) Done in 227.881278ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.197640079s 
+Eval: ReLU Done in 2.629223371s 
+Boot (StoC) Done in 944.609657ms 
+Block1, Layer  2 done!
+Plaintext (kernel) preparation, Done in 161.776048ms 
+	 mult time:  84.034275ms
+	 Pack time:  122.812794ms
+Conv (with BN) Done in 206.940983ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.352098916s 
+Eval: ReLU Done in 2.598176981s 
+Boot (StoC) Done in 1.022623255s 
+Block1, Layer  3 done!
+Plaintext (kernel) preparation, Done in 164.087937ms 
+	 mult time:  81.53098ms
+	 Pack time:  120.783217ms
+Conv (with BN) Done in 202.402442ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.526747036s 
+Eval: ReLU Done in 2.66980343s 
+Boot (StoC) Done in 1.067117904s 
+Block1, Layer  4 done!
+Plaintext (kernel) preparation, Done in 175.618605ms 
+	 mult time:  96.048509ms
+	 Pack time:  133.875248ms
+Conv (with BN) Done in 230.018801ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.534411767s 
+Eval: ReLU Done in 2.697722462s 
+Boot (StoC) Done in 1.067721526s 
+Block1, Layer  5 done!
+Plaintext (kernel) preparation, Done in 198.045361ms 
+	 mult time:  99.508019ms
+	 Pack time:  133.727112ms
+Conv (with BN) Done in 233.324872ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.736787937s 
+Eval: ReLU Done in 2.685952235s 
+Boot (StoC) Done in 1.148472856s 
+Block1, Layer  6 done!
+Plaintext (kernel) preparation, Done in 192.697622ms 
+	 mult time:  99.449508ms
+	 Pack time:  137.636578ms
+Conv (with BN) Done in 237.182347ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.610517675s 
+Eval: ReLU Done in 2.665340955s 
+Boot (StoC) Done in 1.05762253s 
+Block1, Layer  7 done!
+Block1 done.
+Plaintext (kernel) preparation, Done in 175.564345ms 
+	 mult time:  95.708932ms
+	 Pack time:  130.964073ms
+Conv (with BN) Done in 226.761385ms 
+Plaintext (kernel) preparation, Done in 177.910773ms 
+	 mult time:  95.275952ms
+	 Pack time:  130.400168ms
+Conv (with BN) Done in 225.771793ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.698725878s 
+Eval: ReLU Done in 2.679703697s 
+Boot (StoC) Done in 4.12860921s 
+Block1 to 2 done!
+Plaintext (kernel) preparation, Done in 723.079223ms 
+	 mult time:  191.103975ms
+	 Pack time:  274.455585ms
+Conv (with BN) Done in 465.655942ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.762026008s 
+Eval: ReLU Done in 2.664519834s 
+Boot (StoC) Done in 1.039679623s 
+Block2, Layer  1 done!
+Plaintext (kernel) preparation, Done in 723.103602ms 
+	 mult time:  190.211398ms
+	 Pack time:  273.457043ms
+Conv (with BN) Done in 463.764818ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.383493626s 
+Eval: ReLU Done in 2.599166513s 
+Boot (StoC) Done in 944.358059ms 
+Block2, Layer  2 done!
+Plaintext (kernel) preparation, Done in 771.727401ms 
+	 mult time:  190.989269ms
+	 Pack time:  270.385103ms
+Conv (with BN) Done in 461.472173ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.614858162s 
+Eval: ReLU Done in 2.670353562s 
+Boot (StoC) Done in 1.137640878s 
+Block2, Layer  3 done!
+Plaintext (kernel) preparation, Done in 773.110168ms 
+	 mult time:  189.562497ms
+	 Pack time:  268.702525ms
+Conv (with BN) Done in 458.360139ms 
+Bootstrapping... Ours (until CtoS):
+Done in 16.569549329s 
+Eval: ReLU Done in 2.662543784s 
+Boot (StoC) Done in 988.079683ms 
+Block2, Layer  4 done!
+Plaintext (kernel) preparation, Done in 772.000886ms 
+	 mult time:  190.406121ms
+	 Pack time:  269.473105ms
+Conv (with BN) Done in 459.973196ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.378017873s 
+Eval: ReLU Done in 2.837084874s 
+Boot (StoC) Done in 1.067706777s 
+Block2, Layer  5 done!
+Block2 done.
+Plaintext (kernel) preparation, Done in 745.015898ms 
+	 mult time:  201.423835ms
+	 Pack time:  286.645894ms
+Conv (with BN) Done in 488.202189ms 
+Plaintext (kernel) preparation, Done in 737.082425ms 
+	 mult time:  201.688227ms
+	 Pack time:  282.211971ms
+Conv (with BN) Done in 484.032494ms 
+Bootstrapping... Ours (until CtoS):
+Done in 16.267889789s 
+Eval: ReLU Done in 2.822616829s 
+Boot (StoC) Done in 5.727030358s 
+Block2 to 3 done!
+Plaintext (kernel) preparation, Done in 3.021442531s 
+	 mult time:  403.819089ms
+	 Pack time:  573.691247ms
+Conv (with BN) Done in 977.652158ms 
+Bootstrapping... Ours (until CtoS):
+Done in 16.106172614s 
+Eval: ReLU Done in 2.824028809s 
+Boot (StoC) Done in 926.739417ms 
+Block3, Layer  1 done!
+Plaintext (kernel) preparation, Done in 2.835338394s 
+	 mult time:  354.186552ms
+	 Pack time:  527.364718ms
+Conv (with BN) Done in 881.685383ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.643356376s 
+Eval: ReLU Done in 2.820012381s 
+Boot (StoC) Done in 848.78397ms 
+Block3, Layer  2 done!
+Plaintext (kernel) preparation, Done in 3.070448835s 
+	 mult time:  404.274268ms
+	 Pack time:  572.66613ms
+Conv (with BN) Done in 977.074791ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.738143175s 
+Eval: ReLU Done in 2.822363997s 
+Boot (StoC) Done in 948.401171ms 
+Block3, Layer  3 done!
+Plaintext (kernel) preparation, Done in 3.166340376s 
+	 mult time:  420.950011ms
+	 Pack time:  577.736649ms
+Conv (with BN) Done in 998.79113ms 
+Bootstrapping... Ours (until CtoS):
+Done in 15.919078113s 
+Eval: ReLU Done in 2.689915714s 
+Boot (StoC) Done in 800.676686ms 
+Block3, Layer  4 done!
+Plaintext (kernel) preparation, Done in 2.968316178s 
+	 mult time:  399.432956ms
+	 Pack time:  561.247951ms
+Conv (with BN) Done in 960.777604ms 
+Bootstrapping... Ours (until CtoS):
+Done in 14.577650265s 
+Eval: ReLU Done in 2.667993035s 
+Boot (StoC) Done in 778.929062ms 
+Block3, Layer  5 done!
+Block3 done.
+Plaintext (kernel) preparation, Done in 3.250788103s 
+	 mult time:  387.460122ms
+	 Pack time:  554.635416ms
+Conv (with BN) Done in 942.185877ms 
+Final FC done.
+
+===============  DECRYPTION  ===============
+
+Decryption Done in 2.242834ms 
+    [  -3.0867,   -3.5628,   -5.6345,   18.8534,   2.6051,   4.0236,   -1.1236,   -3.5593,   -4.4290,   -4.0863,   -0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+
+ result:  [-3.08665718883276 -3.5628033066168427 -5.634473270736635 18.853429741226137 2.605108093470335 4.023621900007129 -1.1235859533771873 -3.559330995194614 -4.429025228135288 -4.086267847567797]
+Blc1:  131.222283878  sec
+Blc1->2:  23.318570449  sec
+Blc2:  100.402425502  sec
+Blc2->3:  27.28092491  sec
+Blc3:  116.011631022  sec
+Final (reduce_mean & FC):  4.193337248  sec
+Total done in 6m42.431657132s 
+Baseline+trace: latency=6m42.445s heapSys=148874 MB peakRSS=147190504 KB  traced main=591 ops pack=5154 ops
+HESync: profile complete in 11.794133406s
+HESync: paged bootstrapper armed (eager prefetch=true)
+HESync: bootstrap keys paged + main/pack keysets dropped. postArm peakRSS=34645540 KB
+Running  0 -th iter... ker size:  3
+Input: 
+(1, 1):     [  27.2893,   -24.0561,   -83.5538,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 2):     [  28.8596,   -24.4424,   -84.8536,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 3):     [  33.9496,   -20.2462,   -81.5814,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 30):     [  5.9410,   -41.3070,   -96.4408,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 31):     [  -4.3931,   -44.7085,   -96.0004,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(1, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 1):     [  21.9007,   -23.2948,   -80.3641,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 2):     [  21.6554,   -24.4591,   -90.4656,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 3):     [  28.7831,   -21.1767,   -86.1023,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 30):     [  5.9575,   -40.1386,   -99.9002,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 31):     [  -4.3304,   -43.5590,   -98.4992,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(2, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 1):     [  21.2753,   -24.6482,   -83.2514,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 2):     [  22.2834,   -24.4975,   -96.0192,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 3):     [  28.5265,   -23.0555,   -93.4759,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 30):     [  9.7893,   -35.9582,   -95.2940,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 31):     [  1.4091,   -38.5415,   -95.0653,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(3, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 1):     [  -58.5537,   -1.9533,   62.8579,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 2):     [  -82.5884,   -23.7335,   36.2211,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 3):     [  -92.9251,   -34.8011,   26.2646,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 30):     [  -86.2404,   -26.0034,   35.1291,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 31):     [  -111.6890,   -59.7463,   -3.7512,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(30, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 1):     [  -66.0681,   -10.3762,   53.3510,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 2):     [  -76.4690,   -22.5832,   35.3066,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 3):     [  -90.2849,   -39.1869,   19.8319,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 30):     [  -99.4925,   -42.3376,   17.7436,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 31):     [  -96.5861,   -42.6484,   13.2816,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(31, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 1):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 2):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 3):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 30):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 31):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+(32, 32):     [  0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+vec size:  65536
+input width:  [31 15 7]
+kernel width:  3
+num batches:  [16 32 64]
+Encryption done in 12.432367ms 
+Plaintext (kernel) preparation, Done in 195.023589ms 
+	 mult time:  123.470633ms
+	 Pack time:  2.939270236s
+Conv (with BN) Done in 3.06291457s 
+Bootstrapping... Ours (until CtoS):
+Done in 16.448598882s 
+Eval: ReLU Done in 2.664881077s 
+Boot (StoC) Done in 1.040599889s 
+Block1, Layer  1 done!
+Plaintext (kernel) preparation, Done in 152.905972ms 
+	 mult time:  83.252187ms
+	 Pack time:  165.671655ms
+Conv (with BN) Done in 249.159867ms 
+Bootstrapping... Ours (until CtoS):
+Done in 20.069984869s 
+Eval: ReLU Done in 2.631260841s 
+Boot (StoC) Done in 946.770622ms 
+Block1, Layer  2 done!
+Plaintext (kernel) preparation, Done in 156.45045ms 
+	 mult time:  84.491627ms
+	 Pack time:  154.313645ms
+Conv (with BN) Done in 239.014943ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.621709288s 
+Eval: ReLU Done in 2.664163939s 
+Boot (StoC) Done in 976.16467ms 
+Block1, Layer  3 done!
+Plaintext (kernel) preparation, Done in 155.487745ms 
+	 mult time:  85.53077ms
+	 Pack time:  174.537606ms
+Conv (with BN) Done in 260.411284ms 
+Bootstrapping... Ours (until CtoS):
+Done in 20.171030207s 
+Eval: ReLU Done in 2.738173801s 
+Boot (StoC) Done in 1.098009747s 
+Block1, Layer  4 done!
+Plaintext (kernel) preparation, Done in 185.295979ms 
+	 mult time:  100.039871ms
+	 Pack time:  141.868443ms
+Conv (with BN) Done in 242.025933ms 
+Bootstrapping... Ours (until CtoS):
+Done in 20.012976646s 
+Eval: ReLU Done in 2.64235651s 
+Boot (StoC) Done in 958.074535ms 
+Block1, Layer  5 done!
+Plaintext (kernel) preparation, Done in 148.841387ms 
+	 mult time:  93.033592ms
+	 Pack time:  152.691886ms
+Conv (with BN) Done in 245.871992ms 
+Bootstrapping... Ours (until CtoS):
+Done in 21.091596526s 
+Eval: ReLU Done in 2.791524474s 
+Boot (StoC) Done in 1.044333599s 
+Block1, Layer  6 done!
+Plaintext (kernel) preparation, Done in 158.651786ms 
+	 mult time:  88.829406ms
+	 Pack time:  162.751999ms
+Conv (with BN) Done in 251.792252ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.493419295s 
+Eval: ReLU Done in 2.628650281s 
+Boot (StoC) Done in 966.093575ms 
+Block1, Layer  7 done!
+Block1 done.
+Plaintext (kernel) preparation, Done in 151.721292ms 
+	 mult time:  82.895661ms
+	 Pack time:  141.996408ms
+Conv (with BN) Done in 225.061587ms 
+Plaintext (kernel) preparation, Done in 161.64915ms 
+	 mult time:  89.59508ms
+	 Pack time:  146.878281ms
+Conv (with BN) Done in 236.733086ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.215158597s 
+Eval: ReLU Done in 2.657676996s 
+Boot (StoC) Done in 4.766542789s 
+Block1 to 2 done!
+Plaintext (kernel) preparation, Done in 612.986434ms 
+	 mult time:  191.037276ms
+	 Pack time:  285.120404ms
+Conv (with BN) Done in 476.337456ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.61130313s 
+Eval: ReLU Done in 2.748269546s 
+Boot (StoC) Done in 1.067704043s 
+Block2, Layer  1 done!
+Plaintext (kernel) preparation, Done in 606.562845ms 
+	 mult time:  182.466701ms
+	 Pack time:  326.899896ms
+Conv (with BN) Done in 509.585069ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.546478925s 
+Eval: ReLU Done in 2.796653761s 
+Boot (StoC) Done in 1.135657054s 
+Block2, Layer  2 done!
+Plaintext (kernel) preparation, Done in 749.704705ms 
+	 mult time:  286.798812ms
+	 Pack time:  300.936669ms
+Conv (with BN) Done in 587.963375ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.248064212s 
+Eval: ReLU Done in 2.829712405s 
+Boot (StoC) Done in 1.138760729s 
+Block2, Layer  3 done!
+Plaintext (kernel) preparation, Done in 812.848458ms 
+	 mult time:  223.583008ms
+	 Pack time:  311.176991ms
+Conv (with BN) Done in 534.931595ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.804384378s 
+Eval: ReLU Done in 2.679369484s 
+Boot (StoC) Done in 916.966801ms 
+Block2, Layer  4 done!
+Plaintext (kernel) preparation, Done in 761.157434ms 
+	 mult time:  234.6326ms
+	 Pack time:  320.531175ms
+Conv (with BN) Done in 555.359195ms 
+Bootstrapping... Ours (until CtoS):
+Done in 19.547110996s 
+Eval: ReLU Done in 2.618140397s 
+Boot (StoC) Done in 919.491207ms 
+Block2, Layer  5 done!
+Block2 done.
+Plaintext (kernel) preparation, Done in 655.850647ms 
+	 mult time:  221.89557ms
+	 Pack time:  369.04695ms
+Conv (with BN) Done in 591.144867ms 
+Plaintext (kernel) preparation, Done in 770.665012ms 
+	 mult time:  231.015848ms
+	 Pack time:  313.27951ms
+Conv (with BN) Done in 544.525437ms 
+Bootstrapping... Ours (until CtoS):
+Done in 17.665846073s 
+Eval: ReLU Done in 2.644379143s 
+Boot (StoC) Done in 5.364186863s 
+Block2 to 3 done!
+Plaintext (kernel) preparation, Done in 3.063867864s 
+	 mult time:  558.81069ms
+	 Pack time:  693.560939ms
+Conv (with BN) Done in 1.252610287s 
+Bootstrapping... Ours (until CtoS):
+Done in 17.510255636s 
+Eval: ReLU Done in 2.791279762s 
+Boot (StoC) Done in 958.823542ms 
+Block3, Layer  1 done!
+Plaintext (kernel) preparation, Done in 3.103000495s 
+	 mult time:  464.505976ms
+	 Pack time:  682.675935ms
+Conv (with BN) Done in 1.147352178s 
+Bootstrapping... Ours (until CtoS):
+Done in 17.132770569s 
+Eval: ReLU Done in 2.652440925s 
+Boot (StoC) Done in 753.153066ms 
+Block3, Layer  2 done!
+Plaintext (kernel) preparation, Done in 2.761646956s 
+	 mult time:  424.557529ms
+	 Pack time:  663.792998ms
+Conv (with BN) Done in 1.088859988s 
+Bootstrapping... Ours (until CtoS):
+Done in 16.380613564s 
+Eval: ReLU Done in 2.771787354s 
+Boot (StoC) Done in 729.060097ms 
+Block3, Layer  3 done!
+Plaintext (kernel) preparation, Done in 3.123633468s 
+	 mult time:  451.379455ms
+	 Pack time:  611.436628ms
+Conv (with BN) Done in 1.063045468s 
+Bootstrapping... Ours (until CtoS):
+Done in 16.495326603s 
+Eval: ReLU Done in 2.795327365s 
+Boot (StoC) Done in 725.361416ms 
+Block3, Layer  4 done!
+Plaintext (kernel) preparation, Done in 2.880979378s 
+	 mult time:  422.675916ms
+	 Pack time:  666.463792ms
+Conv (with BN) Done in 1.08932345s 
+Bootstrapping... Ours (until CtoS):
+Done in 17.073042664s 
+Eval: ReLU Done in 2.672256782s 
+Boot (StoC) Done in 792.323856ms 
+Block3, Layer  5 done!
+Block3 done.
+Plaintext (kernel) preparation, Done in 2.900018729s 
+	 mult time:  464.072265ms
+	 Pack time:  644.825595ms
+Conv (with BN) Done in 1.109204573s 
+Final FC done.
+
+===============  DECRYPTION  ===============
+
+Decryption Done in 3.229744ms 
+    [  -3.0876,   -3.5627,   -5.6346,   18.8551,   2.6080,   4.0203,   -1.1232,   -3.5601,   -4.4282,   -4.0869,   -0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,   -0.0000,   -0.0000,   0.0000,   -0.0000,   0.0000,   0.0000,   0.0000,  ]
+
+
+ result:  [-3.087637970224023 -3.562740070745349 -5.634578286670148 18.855137861333787 2.6079643880948424 4.020305004902184 -1.1231980854645371 -3.5601316345855594 -4.428187347948551 -4.086918155662715]
+Blc1:  168.409386332  sec
+Blc1->2:  27.420101789  sec
+Blc2:  122.830983201  sec
+Blc2->3:  28.245139217  sec
+Blc3:  122.849940798  sec
+Final (reduce_mean & FC):  4.009670076  sec
+Total done in 7m53.768825035s 
+
+===============  HESync Results  ===============
+Workload:       resnet ker=3 depth=20 cf100=false
+Iterations/run: 1
+Trace (main):   591 ops
+Trace (pack):   5154 ops
+Baseline:       latency=6m42.445s  heapSys=148874 MB  peakRSS=147190504 KB
+Criterion       Latency   PeakEVKs      Stall     BootLoad    BootAsync  PeakRSS(KB) HeapSys(MB)
+PerTrace      7m53.784s         31     2.943s    1m17.542s    1m58.266s    105859740     151432
+
+---  Per-btp call counts (cumulative across criteria)  ---
+btpIdx        CtoS       StoC       Full      Total
+0                0          0          0          0
+1                1          1          0          2
+2                8          8          0         16
+3                5          5          0         10
+4                5          5          0         10
+all             19         19          0         38
+================================================

@@ -174,6 +174,116 @@ func (btp *Bootstrapper) CheckKeys() (err error) {
 	return nil
 }
 
+// NewPrecomputeOnlyBootstrapper builds a Bootstrapper with pDFT/pDFTInv,
+// sine polynomials, and the ctxpool fully populated, but with no
+// BootstrappingKey attached. Used for measuring precompute footprint
+// without paying for key generation. The returned bootstrapper cannot
+// run Bootstrapp until SetKeys is called.
+func NewPrecomputeOnlyBootstrapper(params Parameters, btpParams *BootstrappingParameters) *Bootstrapper {
+	btp := newBootstrapper(params, btpParams)
+	// Mirror NewBootstrapper_mod: regenerate StoC matrices with scale 1.0.
+	btp.pDFT = btp.BootstrappingParameters.GenSlotsToCoeffsMatrix(1.0, btp.encoder)
+	return btp
+}
+
+// PrecomputeBreakdown reports the byte size of each precomputed component
+// held by a Bootstrapper. All values are in bytes.
+type PrecomputeBreakdown struct {
+	PDFTBytes        int64 // SlotsToCoeffs matrices
+	PDFTInvBytes     int64 // CoeffsToSlots matrices
+	SineEvalBytes    int64 // Chebyshev coeffs for sin(2πx)
+	ArcSineBytes     int64 // Taylor coeffs for arcsin(x)
+	CtxPoolBytes     int64 // ciphertext memory pool
+	PermuteIdxBytes  int64 // evaluator's PermuteNTTIndex tables
+	NumPDFTMatrices  int   // count of *PtDiagMatrix in pDFT
+	NumPDFTInvMatrix int   // count of *PtDiagMatrix in pDFTInv
+}
+
+func (b PrecomputeBreakdown) Total() int64 {
+	return b.PDFTBytes + b.PDFTInvBytes + b.SineEvalBytes + b.ArcSineBytes + b.CtxPoolBytes + b.PermuteIdxBytes
+}
+
+// PrecomputeBreakdown returns a per-component byte breakdown of all
+// precomputed data carried by the Bootstrapper. Excludes evaluation keys
+// (Rlk, Rtks) — those live on btp.BootstrappingKey, which the paged
+// bootstrapper already swaps in/out.
+func (btp *Bootstrapper) PrecomputeBreakdown() PrecomputeBreakdown {
+	var bd PrecomputeBreakdown
+	for _, m := range btp.pDFT {
+		bd.PDFTBytes += ptDiagMatrixBytes(m)
+	}
+	for _, m := range btp.pDFTInv {
+		bd.PDFTInvBytes += ptDiagMatrixBytes(m)
+	}
+	bd.NumPDFTMatrices = len(btp.pDFT)
+	bd.NumPDFTInvMatrix = len(btp.pDFTInv)
+	if btp.sineEvalPoly != nil {
+		bd.SineEvalBytes = int64(len(btp.sineEvalPoly.coeffs)) * 16 // complex128
+	}
+	if btp.arcSinePoly != nil {
+		bd.ArcSineBytes = int64(len(btp.arcSinePoly.coeffs)) * 16
+	}
+	if btp.ctxpool != nil {
+		for _, p := range btp.ctxpool.Value {
+			for _, c := range p.Coeffs {
+				bd.CtxPoolBytes += int64(len(c)) * 8
+			}
+		}
+	}
+	if btp.evaluator != nil {
+		for _, idx := range btp.evaluator.permuteNTTIndex {
+			bd.PermuteIdxBytes += int64(len(idx)) * 8
+		}
+	}
+	return bd
+}
+
+// PerPhaseRotations returns the column-rotation indices required by each
+// of the four bootstrapping phases. Galois elements can be derived via
+// params.GaloisElementForColumnRotationBy on each entry. EvalSine uses
+// only the row-rotation (conjugation) Galois element, which is not
+// included here.
+type PerPhaseRotations struct {
+	SubSum []int
+	CtoS   []int
+	StoC   []int
+}
+
+// RotationsByPhase computes per-phase rotation index sets for this
+// bootstrapper. Useful for sizing sub-bootstrap key paging.
+func (btp *Bootstrapper) RotationsByPhase() PerPhaseRotations {
+	var r PerPhaseRotations
+	for i := btp.params.LogSlots(); i < btp.params.MaxLogSlots(); i++ {
+		r.SubSum = append(r.SubSum, 1<<i)
+	}
+	for _, pVec := range btp.pDFTInv {
+		r.CtoS = AddMatrixRotToList(pVec, r.CtoS, btp.params.Slots(), false)
+	}
+	for i, pVec := range btp.pDFT {
+		r.StoC = AddMatrixRotToList(pVec, r.StoC, btp.params.Slots(),
+			(i == 0) && (btp.params.LogSlots() < btp.params.MaxLogSlots()))
+	}
+	return r
+}
+
+func ptDiagMatrixBytes(m *PtDiagMatrix) int64 {
+	if m == nil {
+		return 0
+	}
+	var total int64
+	for _, pair := range m.Vec {
+		for _, p := range pair {
+			if p == nil {
+				continue
+			}
+			for _, row := range p.Coeffs {
+				total += int64(len(row)) * 8
+			}
+		}
+	}
+	return total
+}
+
 // AddMatrixRotToList adds the rotations neede to evaluate pVec to the list rotations
 func AddMatrixRotToList(pVec *PtDiagMatrix, rotations []int, slots int, repack bool) []int {
 
